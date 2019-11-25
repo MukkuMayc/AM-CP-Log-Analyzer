@@ -5,7 +5,7 @@ import-module activedirectory
 $computers = Get-ADComputer -SearchBase "DC=TESTDOMAIN,DC=internal" -Filter * | ForEach-Object {$_.Name} | Sort-Object
 
 # определяем директорию для логирования 
-$logdir = "\\storage\Logs\ServersLog\" + $(Get-Date -UFormat "%Y_%m")
+$logdir = "c:\\forwarded-logs" + $(Get-Date -UFormat "%Y_%m")
 # если директория отсутствует, то создаем 
 if((Test-Path $logdir) -eq 0) {
 	New-Item -ItemType directory $logdir -Force
