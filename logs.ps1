@@ -2,7 +2,7 @@
 
 # импортируем список серверов из Active Directory (для этого в powershell должен быть дополнительно установлен модуль для Active Directory)
 import-module activedirectory
-$computers = Get-ADComputer -SearchBase "OU=Servers,DC=domain,DC=ru" -Filter * | ForEach-Object {$_.Name} | Sort-Object
+$computers = Get-ADComputer -SearchBase "DC=TESTDOMAIN,DC=internal" -Filter * | ForEach-Object {$_.Name} | Sort-Object
 
 # определяем директорию для логирования 
 $logdir = "\\storage\Logs\ServersLog\" + $(Get-Date -UFormat "%Y_%m")
@@ -12,9 +12,9 @@ if((Test-Path $logdir) -eq 0) {
 }
 
 # указываем данные пользователя под которым будут выполнятся команды
-$domain = "domain"
-$username = "username" 
-$password = 'password'
+$domain = "TESTDOMAIN"
+$username = "ivan.admin" 
+$password = '1234Qwerty'
 
 $account = "$domain"+"\"+$($username)
 $accountpwd = ConvertTo-SecureString $password -AsPlainText -Force
