@@ -1,0 +1,66 @@
+Troubles that we faced during this project:
+  Virtual environment
+  Q:
+  How to reinstall OS on a VM?
+  A:
+  1. Turn off the VM if it's runnig
+  2. Select VM, go Edit settings -> remove CD/DVD drive 1 ->
+  Add new device -> CD/DVD drive -> Datastore ISO File -> ISO
+  -> select desired image
+  3. To have time to change BIOS boot priorities for booting from
+  device that have OS image (namely, CD/DVD in our case), set enough
+  boot delay: got Edit settings -> VM options -> Boot options ->
+  Boot delay
+  4. Turn on VM, go to preferred Console (recomended is Remote Console),
+  press F2 to enter BIOS, go through standard procedure of ordering
+  boot devices.
+  Q:
+  Mouse does not work in remote console, what should be done?
+  A:
+  It's a problem of virtual environment, ask system administrator for help.
+  Q:
+  I can't turn on either turn off VM, how to fix it?
+  A:
+  You can only wait this problematic VM get repaired by itself, it's
+  another bug of virtual environment.
+
+  Active Directory
+  Q:
+  What is the correct way to set IP settings for AD controller?
+  A:
+  DNS server: primary 127.0.0.1, secondary 8.8.8.8
+  DHCP scope: DNS server - ipv4 address of controller,
+  router - default gateway
+  (See domain.ps1 for example)
+  Q:
+  After setting AD controller, I can't log in it, but AD is could be
+  reached, how to fix it?
+  A:
+  It's likely you have to change current DNS server to the AD controller
+  IP (which is recommended to be static, btw) and turn off firewall
+  completely.
+  Q:
+  Why changes of different IP settings using GUI sometimes are reflected in
+  ipconfig command?
+  A:
+  It's likely to correctly apply those changes you have to close/OK/apply
+  all or at some upper windows that led you to the current one.
+  Q:
+  How to get back internet connection after joining AD?
+  A:
+  See 1st question: it's likely you forgot about secondary DNS server
+
+  Applications problems
+  Q:
+  How to force Internet Explorer to work normal: let it download files,
+  see any website without adding to exception list etc?
+  A:
+  Go settings -> internet options -> uncheck enable protected mode ->
+  select required boxes in custom level
+  Probably after getting access to internet, you should find Chrome
+  download link.
+  Q:
+  Native archivator does not work correctly (at least with kibana archive),
+  how to fix it?
+  A:
+  Download 7zip
