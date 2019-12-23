@@ -2,17 +2,15 @@
 
 # определяем директорию для логирования, если она отсутствует, то будет создана
 $logdir = "c:\\forwarded-logs" + $(Get-Date -UFormat "%Y_%m")
-
 # указываем данные пользователя под которым будут выполнятся команды
 $domain = "EXAMPLE_DOMAIN"
 $username = "EXAMPLE_USER" 
 $password = "EXAMPLE_PASSWORD"
-
 #указываем журналы, которые мы хотим получить
 $logjournals = "System", "Application", "Security"
-
 #указываем путь в Active Directory, по которому будем искать
 $searchbase = "DC=TESTDOMAIN,DC=internal"
+
 
 # импортируем список серверов из Active Directory (для этого в powershell должен быть дополнительно установлен модуль для Active Directory)
 import-module activedirectory
