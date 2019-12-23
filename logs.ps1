@@ -1,20 +1,27 @@
 ﻿Clear-Host
 
+# определяем директорию для логирования, если она отсутствует, то будет создана
+$logdir = "c:\\forwarded-logs" + $(Get-Date -UFormat "%Y_%m")
+
+# указываем данные пользователя под которым будут выполнятся команды
+$domain = "EXAMPLE_DOMAIN"
+$username = "EXAMPLE_USER" 
+$password = "EXAMPLE_PASSWORD"
+
+#указываем журналы, которые мы хотим получить
+$logjournals = "System", "Application", "Security"
+
+#указываем путь в Active Directory, по которому будем искать
+$searchbase = "DC=TESTDOMAIN,DC=internal"
+
 # импортируем список серверов из Active Directory (для этого в powershell должен быть дополнительно установлен модуль для Active Directory)
 import-module activedirectory
-$computers = Get-ADComputer -SearchBase "DC=TESTDOMAIN,DC=internal" -Filter * | ForEach-Object {$_.Name} | Sort-Object
+$computers = Get-ADComputer -SearchBase $searchbase -Filter * | ForEach-Object {$_.Name} | Sort-Object
 
-# определяем директорию для логирования 
-$logdir = "c:\\forwarded-logs" + $(Get-Date -UFormat "%Y_%m")
 # если директория отсутствует, то создаем 
 if((Test-Path $logdir) -eq 0) {
 	New-Item -ItemType directory $logdir -Force
 }
-
-# указываем данные пользователя под которым будут выполнятся команды
-$domain = "TESTDOMAIN"
-$username = "ivan.admin" 
-$password = '1234Qwerty'
 
 $account = "$domain"+"\"+$($username)
 $accountpwd = ConvertTo-SecureString $password -AsPlainText -Force
@@ -22,8 +29,8 @@ $credential = New-Object System.Management.Automation.PsCredential($account, $ac
 
 # для того, чтобы делать выгрузку за предыдущий час, нужно ограничить время за которое лог был сформирован следующим образом: верхний предел - минус час, нижний предел - начало текущего часа.
 # получается примерно следующее:
-# BiginDate = 08/26/2014 12:00:00
-# EndDate = 08/26/2014 13:00:00
+# BiginDate = 08/26/2019 12:00:00
+# EndDate = 08/26/2019 13:00:00
 # в результате будет выгружен лог созданый в пределах от BiginDate = 08/26/2014 12:00:00 до EndDate = 08/26/2014 13:00:00
 
 $date = Get-Date
@@ -40,8 +47,6 @@ $wmibegindate=[System.Management.ManagementDateTimeConverter]::ToDMTFDateTime($b
 Write-Host "WMIBiginDate = $wmibegindate"
 $wmienddate=[System.Management.ManagementDateTimeConverter]::ToDMTFDateTime($enddate)
 Write-Host "WMIEndDate = $wmienddate"
-
-$logjournals = "System", "Application", "Security"
 
 foreach ($computer in $computers) {
 	Write-Host "Processing computer: $computer"
