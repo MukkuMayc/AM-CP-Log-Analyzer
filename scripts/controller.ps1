@@ -1,4 +1,5 @@
 #change this variables with desired values
+#To join domain after running this code simply type Add-Computer -DomainName $domainName 
 $domainName = "thdom.internal"
 $scopeName = "thscope" 
 $startRange = "192.168.148.20"
@@ -8,7 +9,7 @@ $scopeID = "192.168.148.0"
 $thisMachineIP = "192.168.148.29"
 #router is likely your default gateway
 $router = "192.168.148.2"
-$dnsServer = $thisMachineIP 
+$dnsServer = $thisMachineIP
 
 
 
