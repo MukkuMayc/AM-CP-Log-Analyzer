@@ -16,6 +16,30 @@ Log analysis tool for Windows
 ## Сбор логов
 Для того, чтобы воспользоваться сборщиком логов logs.ps1, необходимо внутри него указать следующие параметры: $domain, $username, $password, $searchbase. $logdir и $logjournals при желании тоже можно изменить.
 
+## Пример
+Допустим, что нам необходимо выяснить, кто производил вход в систему на компьютерах в домене. Для этого мы клонируем наш репозиторий на компьютер-сборщик и переходим в него.
+
+```
+git clone https://github.com/MukkuMayc/AM-CP-Log-Analyzer
+cd AM-CP-Log-Analyzer
+```
+
+Далее в скрипте logs.ps1 мы указываем параметры, перечисленные выше в пункте "Сбор логов", например,
+```
+# определяем директорию для логирования, если она отсутствует, то будет создана
+$logdir = "c:\\forwarded-logs" + $(Get-Date -UFormat "%Y_%m")
+# указываем данные пользователя под которым будут выполнятся команды
+$domain = "TESTDOMAIN"
+$username = "ivan.admin" 
+$password = "EXAMPLE_PASSWORD"
+#указываем журналы, которые мы хотим получить
+$logjournals = "System", "Application", "Security"
+#указываем путь в Active Directory, по которому будем искать
+$searchbase = "DC=TESTDOMAIN,DC=internal"
+```
+Запускаем скрипт. После этого у нас появится папка C:\forwarded_logs2019_12, в которой будут лежать логи с компьютеров в домене. Теперь мы должны поставить ELK для их просмотра, можно воспользоваться [этим](../../wiki/Настройка-ELK-Stack-для-просмотра-собранных-логов) руководством.
+Далее мы заходим в Kibana по адресу localhost:5601 и в разделе Dashboard добавляем фильтр для поля `event.code`, оператором указываем `is`, а значением "4624". После добавления в ленте у нас должны появиться логи, ответственные за вход с учётной записи.
+
 ## Subscriptions and GetWmi Object
 <h4>Windows Event Collector and Subscriptions</h4> <br/>
 You can subscribe to receive and store events on a local computer (event collector) that are forwarded from a remote computer (event source). 
