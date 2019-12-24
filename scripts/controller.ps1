@@ -1,3 +1,4 @@
+#change this variables with desired values
 $domainName = "thdom.internal"
 $scopeName = "thscope" 
 $startRange = "192.168.148.20"
@@ -5,8 +6,9 @@ $endRange = "192.168.148.100"
 $subnetMask = "255.255.255.0"
 $scopeID = "192.168.148.0"
 $thisMachineIP = "192.168.148.29"
-$dnsServer = $thisMachineIP 
+#router is likely your default gateway
 $router = "192.168.148.2"
+$dnsServer = $thisMachineIP 
 
 
 
