@@ -7,7 +7,7 @@ Log analysis tool for Windows
 1. ***logs.ps1***
 Импортирует список серверов из Active Directory
 По завершении действия скрипта на выходе получаются файлы вида: ComputerName-JournalName.json.
-2. ***domain.ps1*** добавляет компьютер в домен.
+2. ***controller.ps1*** создает Active Directory.
 3. ***autostart.ps1*** добавляет сборщик логов в планировщик Windows.
 
 
