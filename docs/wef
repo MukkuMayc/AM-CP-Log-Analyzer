@@ -10,7 +10,7 @@ On the collector, open Event Viewer click on Subscriptions. The first time you o
 
 Allowing the Network Service to Read Event Logs:
 1. Begin by opening up a command prompt and running wevtutil gl security. This will provide various information about the Security event log. But the piece to pay attention to is the channelAccess SDDL. Copy the SDDL.
-2. Create a GPO via the Group Policy Management Console. Inside of the GPO, navigate to Computer Configuration → Policies → Administrative Templates → Windows Components → Event Forwarding → Configure target subscription manager.
+2. Create a GPO (Server Manager -> Tools -> Group Policy Management) via the Group Policy Management Console. Inside of the GPO, navigate to Computer Configuration -> Policies -> Administrative Templates -> Windows Components -> Event Forwarding -> Configure target subscription manager.
 3. Set the value for the target subscription manager to the WinRM endpoint on the collector. You will set the Server to be in the format:
 Server=http://<FQDN of the collector>:5985/wsman/SubscriptionManager/WEC,Refresh=60
 4. Next, find the SDDL you copied earlier from running wevtutil gl security and paste it into the setting Computer Configuration → Policies → Administrative Templates → Windows Components → Event Log Service → Security → Configure log access.
