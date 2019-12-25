@@ -1,0 +1,30 @@
+Source-initiated subscriptions allow you to define a subscription on an event collector computer without defining the event source computers, and then multiple remote event source computers can be set up (using a group policy setting) to forward events to the event collector computer. This differs from a collector initiated subscription because in the collector initiated subscription model, the event collector must define all the event sources in the event subscription.
+When setting up a source-initiated subscription, consider whether the event source computers are in the same domain as the event collector computer. The following sections describe the steps to follow when the event sources are in the same domain.
+
+Setting up a source-initiated subscription where the event sources are in the same domain as the event collector computer:
+Run winrm quickconfig on both event and source computer.
+To test if all is ok run the the Enable-PSRemoting PowerShell cmdlet with no parameters on the collector. Even if PowerShell Remoting is already enabled, it will skip the necessary steps. To be sure, you can also run Invoke-Command -ComputerName <COLLECTORHOSTNAME> -ScriptBlock {1} from a remote computer. If you don't receive an error, PowerShell Remoting is working. 
+
+Starting the Subscription Collector Service:
+On the collector, open Event Viewer click on Subscriptions. The first time you open the Subscriptions option, Windows will ask if you want to start the Windows Event Log Collector Service and configured to start automatically. Click Yes to accept.
+
+Allowing the Network Service to Read Event Logs:
+1. Begin by opening up a command prompt and running wevtutil gl security. This will provide various information about the Security event log. But the piece to pay attention to is the channelAccess SDDL. Copy the SDDL.
+2. Create a GPO via the Group Policy Management Console. Inside of the GPO, navigate to Computer Configuration → Policies → Administrative Templates → Windows Components → Event Forwarding → Configure target subscription manager.
+3. Set the value for the target subscription manager to the WinRM endpoint on the collector. You will set the Server to be in the format:
+Server=http://<FQDN of the collector>:5985/wsman/SubscriptionManager/WEC,Refresh=60
+4. Next, find the SDDL you copied earlier from running wevtutil gl security and paste it into the setting Computer Configuration → Policies → Administrative Templates → Windows Components → Event Log Service → Security → Configure log access.
+
+Setting up a Subscription:
+1. On the collector, open the Windows Event Viewer and right-click on Subscriptions, then create subscription.
+2. Select the Source computer initiated option and then click Select Computer Groups. This is where you will select which computers you'd like to forward events from.
+3. Next select the events to forward. Opening up the query filter, select Security to forward events to the collector from the Security event log.
+4. Once the Security log is selected, you can filter down even more by entering the event ID, keywords, users and computers etc
+5. Click OK to exit from the Query Filter.
+6. Click Advanced in the Subscription Properties window. Now select Minimize Latency. This setting will ensure the collector will receive events as soon as possible and also to help it catch up if it gets behind.
+By this moment it's recommended to ensure the group policy is applied with gpupdate /force.
+
+
+Verifying the WEF Configuration:
+Once WEF is set up, you should now check to see if the forwarders actually checked in by checking the Source Computers column on the main Subscriptions page.
+You can also check the Event Forwarding Plugin Operational log under Applications and Services on the client to make sure everything is working. This is where you'll see descriptive errors if something has gone awry with Kerberos or firewalls.
